@@ -6,10 +6,11 @@ import UserModel from "../Models/UserModel.js";
 export const requireSignInAsync = async (req, resp, next) => {
   try {
     const decode = JWT.verify(req.headers.token, process.env.JWT_SECRET);
-    req.user=decode;
+    req.user = decode;
     next();
   } catch (error) {
     console.log(error);
+    resp.status(404).send({ succes: false, message: "token invalid" });
   }
 };
 
@@ -22,16 +23,15 @@ export const IsAdmin = async (req, resp, next) => {
         success: false,
         message: "un-autherized user",
       });
-    }
-    else{
-        next();
+    } else {
+      next();
     }
   } catch (error) {
     console.log(error);
     resp.status(401).send({
-        success:false,
-        message:"error in meddleware",
-        error
-    })
+      success: false,
+      message: "error in meddleware",
+      error,
+    });
   }
 };

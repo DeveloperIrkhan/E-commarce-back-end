@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import morgan from "morgan";
 import connectDb from "./config/database.js";
 import authRoutes from "./routers/authroute.js"
+import cors from 'cors'
 
 //configuring env
 dotenv.config();
@@ -15,10 +16,11 @@ connectDb();
 const port = process.env.PORT || 8080;
 //rest api object calling
 const app = express();
+//enableing cors for our react app.
+app.use(cors());
 //middlewares
 app.use(express.json());
 app.use(morgan("dev"));
-
 //routes
 
 app.use("/auth", authRoutes);

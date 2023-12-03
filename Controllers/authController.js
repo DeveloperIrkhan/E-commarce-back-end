@@ -68,19 +68,19 @@ export const registerController = async (req, resp) => {
     } = req.body;
     //validation
     if (!firstName) {
-      return resp.send({ error: "firstName is required." });
+      return resp.send({ message: "firstName is required." });
     }
     if (!email) {
-      return resp.send({ error: "email is required." });
+      return resp.send({ message: "email is required." });
     }
     if (!password) {
-      return resp.send({ error: "password is required." });
+      return resp.send({ message: "password is required." });
     }
     if (!phoneNumber) {
-      return resp.send({ error: "phoneNumber is required." });
+      return resp.send({ message: "phoneNumber is required." });
     }
     if (!address) {
-      return resp.send({ error: "address is required." });
+      return resp.send({ message: "address is required." });
     }
     //validation for existing user
     const existingUser = await userModel.findOne({ email: email });
@@ -88,7 +88,7 @@ export const registerController = async (req, resp) => {
     if (existingUser) {
       return resp
         .status(200)
-        .send({ success: true, message: "user already exist, please login" });
+        .send({ success: false, message: "user already exist, please login" });
     }
     //password hashing
     const hashPassword = await hashingPassword(password);
