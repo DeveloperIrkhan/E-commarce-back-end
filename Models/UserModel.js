@@ -29,9 +29,13 @@ const userSchema = new mongoose.Schema(
       type: String,
       require: true,
     },
+    answer: {
+      type: String,
+      require: true,
+    },
     userRole: {
       type: Number,
-      default: 0
+      default: 0,
     },
   },
   { timestamps: true }
