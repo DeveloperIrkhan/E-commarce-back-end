@@ -43,7 +43,7 @@ export const LoginUserController = async (req, resp) => {
         name: `${user.firstName} ${user.lastName}`,
         phone: user.phoneNumber,
         Address: user.address,
-        role:user.userRole
+        role: user.userRole,
       },
       token,
     });
@@ -148,6 +148,57 @@ export const forgotPasswordController = async (req, resp) => {
     }
     const hashedPassword = await hashingPassword(newPassword);
     await UserModel.findByIdAndUpdate(user._id, { password: hashedPassword });
+    resp.status(200).send({
+      success: true,
+      message: "password reset successfully.",
+    });
+  } catch (error) {
+    console.log(error);
+    resp.status(500).send({
+      success: false,
+      message: "something went wrong",
+      error,
+    });
+  }
+};
+
+export const changePasswordController = async (req, resp) => {
+  try {
+    const { email, oldPassword, newPassword } = req.body;
+    if (!email) {
+      resp.status(400).send({
+        success: false,
+        message: "email is required!",
+      });
+    }
+    if (!oldPassword) {
+      resp.status(400).send({
+        success: false,
+        message: "old Password is required!",
+      });
+    }
+    if (!newPassword) {
+      resp.status(400).send({
+        success: false,
+        message: "new Password is required!",
+      });
+    }
+    const user = await UserModel.findOne({ email: email });
+    if (!user) {
+      return resp.status(404).send({
+        success: false,
+        message: "user not found email",
+      });
+    }
+    const passwordMatching = await comparePassword(oldPassword, user.password);
+    if (!passwordMatching) {
+      return resp.status(400).send({
+        success: false,
+        message: "password doesn't matched",
+      });
+    }
+    const encryptPassword = await hashingPassword(newPassword);
+    await UserModel.findByIdAndUpdate(user._id, { password: encryptPassword });
     resp.status(200).send({
       success: true,
       message: "password reset successfully.",

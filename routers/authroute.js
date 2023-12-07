@@ -4,6 +4,7 @@ import {
   LoginUserController,
   testController,
   forgotPasswordController,
+  changePasswordController,
 } from "../Controllers/authController.js";
 import { IsAdmin, requireSignInAsync } from "../middleware/authMiddleware.js";
 
@@ -13,7 +14,6 @@ const router = express.Router();
 router.post("/register", registerController);
 //login
 router.post("/Login", LoginUserController);
-export default router;
 //for testing token getting and Admin checking.
 router.get("/test", requireSignInAsync, IsAdmin, testController);
 //protected route for user dashboard
@@ -24,5 +24,15 @@ router.get("/user-dashboard", requireSignInAsync, (req, resp) => {
 router.get("/admin-dashboard", requireSignInAsync, IsAdmin, (req, resp) => {
   resp.status(200).send({ ok: true });
 });
+//protected route for chaning password
+router.post(
+  "/change-password",
+  requireSignInAsync,
+  changePasswordController,
+  (req, resp) => {
+    resp.status(200).send({ ok: true });
+  }
+);
 //reset password
 router.post("/forgot-password", forgotPasswordController);
+export default router;
