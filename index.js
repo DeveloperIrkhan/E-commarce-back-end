@@ -6,7 +6,7 @@ import connectDb from "./config/database.js";
 import authRoutes from "./routers/authroute.js";
 import cors from "cors";
 import categoryroute from "./routers/categoryroute.js";
-
+import productroute from "./routers/productroute.js";
 //configuring env
 dotenv.config();
 
@@ -24,9 +24,10 @@ app.use(express.json());
 app.use(morgan("dev"));
 //routes for auth
 app.use("/auth", authRoutes);
-
-//routes for category 
+//routes for category
 app.use("/category", categoryroute);
+//routes for product
+app.use("/product", productroute);
 
 app.get("/", (req, resp) => {
   resp.send({ message: "hi, this is MERN e-commerce website" });
