@@ -109,7 +109,7 @@ export const getProductPhotoController = async (req, res) => {
       "photo"
     );
     if (productImage.photo.data) {
-      res.set("Content-Type", productImage.photo.contentType);
+      res.set("Content-type", productImage.photo.contentType);
       return res.status(200).send(productImage.photo.data);
     }
   } catch (error) {
@@ -144,7 +144,6 @@ export const updateProductController = async (req, res) => {
   try {
     const {
       name,
-      slug,
       description,
       price,
       categoryType,
@@ -164,16 +163,16 @@ export const updateProductController = async (req, res) => {
         return res.status(500).send({ error: "category Type is required " });
       case !quantity:
         return res.status(500).send({ error: "quantity is required " });
-      case !photo && photo.size > 1000000:
+      case photo  && photo.size > 1000000:
         return res
           .status(500)
-          .send({ error: "photo is require and size should be < 1MB" });
+          .send({ error: "photo is required and should be less then 2mb" });
     }
     const updateProduct = await ProductModel.findByIdAndUpdate(
       req.params.pid,
       { ...req.fields, slug: slugify(name) },
       { new: true }
-    ); 
+    );
     if (photo) {
       updateProduct.photo.data = fs.readFileSync(photo.path);
       updateProduct.photo.contentType = photo.type;
